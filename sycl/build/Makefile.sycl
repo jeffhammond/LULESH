@@ -1,0 +1,37 @@
+#MPI_FLAGS = -DUSE_MPI
+
+CXX       = dpcpp
+CXXFLAGS  = -std=c++14
+DFLAGS	  = $(MPI_FLAGS) -lineinfo
+RFLAGS 	  = $(MPI_FLAGS) -O3 -DNDEBUG
+
+LINKFLAGS	= $(MPI_FLAGS)
+LINKFLAGS	+= -lstdc++ -lm
+
+all: release
+
+debug: LINKFLAGS +=
+
+release: 	CXXFLAGS += $(RFLAGS)
+debug: 		CXXFLAGS += $(DFLAGS)
+
+release: lulesh
+debug: lulesh
+
+lulesh: allocator.o lulesh.o lulesh-comms.o lulesh-comms-gpu.o
+	$(CXX) $(LINKFLAGS) allocator.o lulesh.o lulesh-comms.o lulesh-comms-gpu.o -o lulesh
+
+allocator.o: allocator.cc vector.h
+	$(CXX) $(CXXFLAGS) allocator.cc -I ./ -c -o allocator.o
+
+lulesh.o: lulesh.cc util.h vector.h allocator.h
+	$(CXX) $(CXXFLAGS) lulesh.cc -I ./  $(INC_SILO) -c -o lulesh.o
+
+lulesh-comms.o: lulesh-comms.cc
+	$(CXX) $(CXXFLAGS) lulesh-comms.cc -I ./ -c -o lulesh-comms.o
+
+lulesh-comms-gpu.o: lulesh-comms-gpu.cc
+	$(CXX) $(CXXFLAGS) lulesh-comms-gpu.cc -I ./ -c -o lulesh-comms-gpu.o
+
+clean:
+	rm -rf allocator.o lulesh-comms.o lulesh-comms-gpu.o lulesh.o lulesh xyz.asc regNumList.txt
