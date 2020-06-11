@@ -393,69 +393,25 @@ void InitializeFields(Domain* domain)
 {
  /* Basic Field Initialization */
 
-  /*
- DPCT1007:6: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->ss.begin(), domain->ss.end(), 0.);
-  /*
- DPCT1007:7: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->e.begin(), domain->e.end(), 0.);
-  /*
- DPCT1007:8: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->p.begin(), domain->p.end(), 0.);
-  /*
- DPCT1007:9: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->q.begin(), domain->q.end(), 0.);
-  /*
- DPCT1007:10: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->v.begin(), domain->v.end(), 1.);
+  // Manual migration of thrust::fill calls begins with declaration of an
+  // execution policy based on the DPCT default queue.
+  auto p_ct1 = dpstd::execution::make_device_policy(dpct::get_default_queue());
 
-  /*
- DPCT1007:11: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->xd.begin(), domain->xd.end(), 0.);
-  /*
- DPCT1007:12: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->yd.begin(), domain->yd.end(), 0.);
-  /*
- DPCT1007:13: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->zd.begin(), domain->zd.end(), 0.);
+  std::fill(p_ct1, domain->ss.begin(), domain->ss.end(), 0.);
+  std::fill(p_ct1, domain->e.begin(), domain->e.end(), 0.);
+  std::fill(p_ct1, domain->p.begin(), domain->p.end(), 0.);
+  std::fill(p_ct1, domain->q.begin(), domain->q.end(), 0.);
+  std::fill(p_ct1, domain->v.begin(), domain->v.end(), 1.);
 
-  /*
- DPCT1007:14: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->xdd.begin(), domain->xdd.end(), 0.);
-  /*
- DPCT1007:15: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->ydd.begin(), domain->ydd.end(), 0.);
-  /*
- DPCT1007:16: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->zdd.begin(), domain->zdd.end(), 0.);
+  std::fill(p_ct1, domain->xd.begin(), domain->xd.end(), 0.);
+  std::fill(p_ct1, domain->yd.begin(), domain->yd.end(), 0.);
+  std::fill(p_ct1, domain->zd.begin(), domain->zd.end(), 0.);
 
-  /*
- DPCT1007:17: Migration of this CUDA API is not supported by the Intel(R)
-   * DPC++ Compatibility Tool.
- */
-  thrust::fill(domain->nodalMass.begin(), domain->nodalMass.end(), 0.);
+  std::fill(p_ct1, domain->xdd.begin(), domain->xdd.end(), 0.);
+  std::fill(p_ct1, domain->ydd.begin(), domain->ydd.end(), 0.);
+  std::fill(p_ct1, domain->zdd.begin(), domain->zdd.end(), 0.);
+
+  std::fill(p_ct1, domain->nodalMass.begin(), domain->nodalMass.end(), 0.);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2646,9 +2602,13 @@ void CalcVolumeForceForElems(const Real_t hgcoef,Domain *domain)
     Vector_d<Real_t>* fy_elem = Allocator< Vector_d<Real_t> >::allocate(padded_numElem*8);
     Vector_d<Real_t>* fz_elem = Allocator< Vector_d<Real_t> >::allocate(padded_numElem*8);
 #else
-    thrust::fill(domain->fx.begin(),domain->fx.end(),0.);
-    thrust::fill(domain->fy.begin(),domain->fy.end(),0.);
-    thrust::fill(domain->fz.begin(),domain->fz.end(),0.);
+    // Manual migration of thrust::fill calls begins with declaration of an
+    // execution policy based on the DPCT default queue.
+    auto p_ct1 = dpstd::execution::make_device_policy(dpct::get_default_queue());
+
+    std::fill(p_ct1, domain->fx.begin(),domain->fx.end(),0.);
+    std::fill(p_ct1, domain->fy.begin(),domain->fy.end(),0.);
+    std::fill(p_ct1, domain->fz.begin(),domain->fz.end(),0.);
 #endif
 
     int num_threads = numElem ;
@@ -2740,9 +2700,13 @@ void CalcVolumeForceForElems_warp_per_4cell(const Real_t hgcoef,Domain *domain)
     Vector_d<Real_t>* fy_elem = Allocator< Vector_d<Real_t> >::allocate(padded_numElem*8);
     Vector_d<Real_t>* fz_elem = Allocator< Vector_d<Real_t> >::allocate(padded_numElem*8);
 #else
-    thrust::fill(domain->fx.begin(),domain->fx.end(),0.);
-    thrust::fill(domain->fy.begin(),domain->fy.end(),0.);
-    thrust::fill(domain->fz.begin(),domain->fz.end(),0.);
+    // Manual migration of thrust::fill calls begins with declaration of an
+    // execution policy based on the DPCT default queue.
+    auto p_ct1 = dpstd::execution::make_device_policy(dpct::get_default_queue());
+
+    std::fill(p_ct1, domain->fx.begin(),domain->fx.end(),0.);
+    std::fill(p_ct1, domain->fy.begin(),domain->fy.end(),0.);
+    std::fill(p_ct1, domain->fz.begin(),domain->fz.end(),0.);
 #endif
 
     const int warps_per_cta = 2;
