@@ -904,7 +904,7 @@ Domain *NewDomain(char* argv[], Int_t numRanks, Index_t colLoc,
        fsuccess = fscanf(fp, "%d", &n) ;
        freeSurf_h[i] = Index_t(n) ;
     }
-    printf("%c\n",fsuccess);//nothing
+    printf("%d\n",fsuccess);//nothing
     fclose(fp);
 
     /* set up boundary condition information */
