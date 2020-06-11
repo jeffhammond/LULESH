@@ -14,15 +14,15 @@ class Vector_d;
 
 // host vector
 template <class T>
-class Vector_h: public thrust::host_vector<T> {
+class Vector_h: public std::vector<T> {
   public:
 
   // Constructors
   Vector_h() {}
-  inline Vector_h(int N) : thrust::host_vector<T>(N) {}
-  inline Vector_h(int N, T v) : thrust::host_vector<T>(N,v) {}
-  inline Vector_h(const Vector_h<T>& a) : thrust::host_vector<T>(a) {}
-  inline Vector_h(const Vector_d<T>& a) : thrust::host_vector<T>(a) {}
+  inline Vector_h(int N) : std::vector<T>(N) {}
+  inline Vector_h(int N, T v) : std::vector<T>(N,v) {}
+  inline Vector_h(const Vector_h<T>& a) : std::vector<T>(a) {}
+  inline Vector_h(const Vector_d<T>& a) : std::vector<T>(a) {}
 
   template< typename OtherVector >
     inline void copy( const OtherVector &a ) { 
@@ -33,12 +33,12 @@ class Vector_h: public thrust::host_vector<T> {
   inline Vector_h<T>& operator=(const Vector_d<T> &a) { copy(a); return *this; }
 
   inline T* raw() { 
-    if(bytes()>0) return thrust::raw_pointer_cast(this->data()); 
+    if(bytes()>0) return dpct::raw_pointer_cast(this->data()); 
     else return 0;
   } 
 
   inline const T* raw() const { 
-    if(bytes()>0) return thrust::raw_pointer_cast(this->data()); 
+    if(bytes()>0) return dpct::raw_pointer_cast(this->data()); 
     else return 0;
   } 
 
@@ -48,14 +48,14 @@ class Vector_h: public thrust::host_vector<T> {
 
 // device vector
 template <class T>
-class Vector_d: public thrust::device_vector<T> {
+class Vector_d: public dpct::device_vector<T> {
   public:
 
   Vector_d() {}
-  inline Vector_d(int N) : thrust::device_vector<T>(N) {}
-  inline Vector_d(int N, T v) : thrust::device_vector<T>(N,v) {}
-  inline Vector_d(const Vector_d<T>& a) : thrust::device_vector<T>(a) {}
-  inline Vector_d(const Vector_h<T>& a) : thrust::device_vector<T>(a) {}
+  inline Vector_d(int N) : dpct::device_vector<T>(N) {}
+  inline Vector_d(int N, T v) : dpct::device_vector<T>(N,v) {}
+  inline Vector_d(const Vector_d<T>& a) : dpct::device_vector<T>(a) {}
+  inline Vector_d(const Vector_h<T>& a) : dpct::device_vector<T>(a) {}
 
   template< typename OtherVector >
     inline void copy( const OtherVector &a ) { 
@@ -70,12 +70,12 @@ class Vector_d: public thrust::device_vector<T> {
     DPCT1007:0: Migration of this CUDA API is not supported by the Intel(R)
     DPC++ Compatibility Tool.
     */
-    if (bytes() > 0) return thrust::raw_pointer_cast(this->data()); 
+    if (bytes() > 0) return dpct::raw_pointer_cast(this->data()); 
     else return 0;
   } 
 
   inline const T* raw() const { 
-    if(bytes()>0) return thrust::raw_pointer_cast(this->data()); 
+    if(bytes()>0) return dpct::raw_pointer_cast(this->data()); 
     else return 0;
   } 
 
