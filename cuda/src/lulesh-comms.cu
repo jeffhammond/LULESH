@@ -3,7 +3,7 @@
 
 #if USE_MPI
 #include <mpi.h>
-#include <string.h>
+#include <cstring>
 #endif
 
 #include "lulesh.h"
