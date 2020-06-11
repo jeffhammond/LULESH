@@ -300,7 +300,7 @@ void cuda_init(int rank)
 
     cudaSafeCall( cudaGetDeviceProperties(&cuda_deviceProp, dev) );
     if (cuda_deviceProp.major < 3) {
-        fprintf(stderr, "cuda_init(): This implementation of Lulesh requires device SM 3.0+.\n", dev);
+        fprintf(stderr, "cuda_init(): This implementation of Lulesh requires device SM 3.0+ (%d).\n", dev);
         exit(1);
     }
 
