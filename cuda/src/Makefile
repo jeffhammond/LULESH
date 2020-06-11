@@ -2,6 +2,7 @@
 
 NVCC	= nvcc -ccbin clang-7
 CPPFLAGS	= -x cu -dc -D_GLIBCXX_USE_CXX11_ABI=0
+CPPFLAGS	+= -DDPCT # enables workaround DPCT needs
 #CXXFLAGS	+= -arch=sm_60
 CXXFLAGS	+= -gencode=arch=compute_60,code=\"sm_60,compute_60\"
 CXXFLAGS	+= -std=c++11

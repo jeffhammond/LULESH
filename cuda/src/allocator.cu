@@ -20,6 +20,9 @@ inline T* allocate( int size )
 }
 
 template< typename T >
+#if DPCT
+typename
+#endif
 Allocator<T>::FreeMap& Allocator<T>::getFreeVars( )
 {
   static FreeMap s_free_vars;
